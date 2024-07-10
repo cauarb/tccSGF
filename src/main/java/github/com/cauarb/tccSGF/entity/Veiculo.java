@@ -2,10 +2,8 @@ package github.com.cauarb.tccSGF.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -38,7 +36,7 @@ public class Veiculo {
     @Column(name = "kmAtual",length = 30, nullable = false)
     private Float kmAtual;
 
-    @OneToOne(mappedBy = "departamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
     @JoinColumn(name = "id_Deparmento")
     private Departamento departamento;
 

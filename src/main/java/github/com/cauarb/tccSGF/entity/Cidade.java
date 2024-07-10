@@ -22,7 +22,7 @@ public class Cidade {
     @Column(name = "nome",length = 30, nullable = false)
     private String nome_Cidade;
 
-    @Column(name = "nome",length = 30, nullable = false)
+    @Column(name = "estado",length = 30, nullable = false)
     private String estado;
 
     @Override

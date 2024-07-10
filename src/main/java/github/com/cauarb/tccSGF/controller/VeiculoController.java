@@ -43,6 +43,7 @@ public class VeiculoController {
         veiculoExistente.setAno(veiculoAtualizado.getAno());
         veiculoExistente.setKmInicio(veiculoAtualizado.getKmInicio());
         veiculoExistente.setKmAtual(veiculoAtualizado.getKmAtual());
+        veiculoExistente.setDepartamento(veiculoAtualizado.getDepartamento());
 
         veiculoRepository.save(veiculoExistente);
     }
