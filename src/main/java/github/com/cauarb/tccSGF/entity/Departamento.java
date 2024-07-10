@@ -26,11 +26,9 @@ public class Departamento {
     @Column(name = "nome",length = 30, nullable = false)
     private String nome_Departamento;
 
-    @ManyToMany(mappedBy = "departamento")
-    private List<Veiculo> veiculos;
-
     @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL)
-    private List<SubDepartamento> subDepartamentos;
+    @JoinColumn(name = "id_Veiculo")
+    private List<Veiculo> veiculos;
 
     @Override
     public String toString() {

@@ -38,7 +38,7 @@ public class Veiculo {
     @Column(name = "kmAtual",length = 30, nullable = false)
     private Float kmAtual;
 
-    @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "departamento", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_Deparmento")
     private Departamento departamento;
 
