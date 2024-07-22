@@ -3,10 +3,7 @@ package github.com.cauarb.tccSGF.domain.departamento.entity;
 
 import github.com.cauarb.tccSGF.domain.veiculo.entity.Veiculo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class Departamento {
     private Long id_Departamento;
 
     @Column(name = "nome",length = 30, nullable = false)
-    private String nome_Departamento;
+    private String nome;
 
     @OneToMany(mappedBy = "departamento")
     private List<Veiculo> veiculos;
@@ -33,7 +30,31 @@ public class Departamento {
     public String toString() {
         return "Departamento{" +
                 "id_Departamento=" + id_Departamento +
-                ", nome='" + nome_Departamento + '\'' +
+                ", nome='" + nome + '\'' +
                 '}';
+    }
+
+    public Long getId_Departamento() {
+        return id_Departamento;
+    }
+
+    public void setId_Departamento(Long id_Departamento) {
+        this.id_Departamento = id_Departamento;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public List<Veiculo> getVeiculos() {
+        return veiculos;
+    }
+
+    public void setVeiculos(List<Veiculo> veiculos) {
+        this.veiculos = veiculos;
     }
 }

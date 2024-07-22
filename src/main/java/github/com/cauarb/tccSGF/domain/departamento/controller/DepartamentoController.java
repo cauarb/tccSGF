@@ -38,7 +38,7 @@ public class DepartamentoController {
         Departamento departamentoExistente = departamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Departamento nao encontrado: " + id));
 
-        departamentoExistente.setNome_Departamento(departamentoAtualizado.getNome_Departamento());
+        departamentoExistente.setNome(departamentoAtualizado.getNome());
         //departamentoExistente.s(departamentoAtualizado.getSubDepartamentos());
 
         departamentoRepository.save(departamentoExistente);

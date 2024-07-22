@@ -3,9 +3,12 @@ package github.com.cauarb.tccSGF.domain.veiculo.service;
 import github.com.cauarb.tccSGF.domain.veiculo.entity.Veiculo;
 import github.com.cauarb.tccSGF.domain.departamento.repository.DepartamentoRepository;
 import github.com.cauarb.tccSGF.domain.veiculo.repository.VeiculoRepository;
-import jakarta.transaction.Transactional;
+import github.com.cauarb.tccSGF.exceptions.VehicleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VeiculoService {
@@ -15,12 +18,35 @@ public class VeiculoService {
 
     private DepartamentoRepository departamentoRepository;
 
-    @Transactional
-    public Veiculo cadastrarVeiculo(Veiculo veiculo) {
-        if (veiculo.getDepartamento() == null ||
-                !departamentoRepository.existsById(veiculo.getDepartamento().getId_Departamento())) {
-            throw new IllegalArgumentException("Departamento invalido ou nao fornecido");
+    public Veiculo cadastrarVeiculo(Veiculo novoVeiculo) {
+        if (veiculoRepository.existsByPlaca(novoVeiculo.getPlaca())) {
+            throw new IllegalArgumentException("Veículo com a mesma placa já existe");
         }
+        return veiculoRepository.save(novoVeiculo);
+    }
+
+    public Optional<Veiculo> findById(Long id) {
+        return veiculoRepository.findById(id);
+    }
+
+    public Veiculo atualizarQuilometragem(Long id, Long novaQuilometragem) {
+        Veiculo veiculo = veiculoRepository.findById(id)
+                .orElseThrow(() -> new VehicleNotFoundException("Veículo não encontrado com id: " + id));
+
+        if (novaQuilometragem < veiculo.getKmAtual()) {
+            throw new IllegalArgumentException("A nova quilometragem não pode ser menor que a quilometragem atual");
+        }
+
+        veiculo.setKmAtual(novaQuilometragem);
         return veiculoRepository.save(veiculo);
+    }
+
+    public Veiculo buscarPorPlaca(String placa) {
+        return veiculoRepository.findByPlaca(placa)
+                .orElseThrow(() -> new VehicleNotFoundException("Veículo não encontrado com a placa: " + placa));
+    }
+
+    public List<Veiculo> listarPorDepartamento(String departamento) {
+        return veiculoRepository.findByDepartamentoNome(departamento);
     }
 }

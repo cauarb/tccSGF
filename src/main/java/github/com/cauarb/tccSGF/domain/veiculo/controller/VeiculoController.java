@@ -3,6 +3,8 @@ package github.com.cauarb.tccSGF.domain.veiculo.controller;
 import github.com.cauarb.tccSGF.domain.veiculo.entity.Veiculo;
 import github.com.cauarb.tccSGF.domain.veiculo.repository.VeiculoRepository;
 import github.com.cauarb.tccSGF.domain.veiculo.service.VeiculoService;
+import github.com.cauarb.tccSGF.exceptions.DataIntegrityViolationException;
+import github.com.cauarb.tccSGF.exceptions.VehicleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +30,14 @@ public class VeiculoController {
             Veiculo veiculoSalvo = veiculoService.cadastrarVeiculo(novoVeiculo);
             return new ResponseEntity<>(veiculoSalvo, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            throw new DataIntegrityViolationException("Dados inválidos para cadastro de veículo");
         }
     }
 
     @GetMapping("{id}")
-    public Veiculo acharPorId(@PathVariable Long id){
-        return veiculoRepository.findById(id).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Veiculo não encontrado") );
+    public Veiculo acharPorId(@PathVariable Long id) {
+        return veiculoRepository.findById(id)
+                .orElseThrow(() -> new VehicleNotFoundException("Veículo não encontrado com id: " + id));
     }
 
     @GetMapping
@@ -42,15 +45,33 @@ public class VeiculoController {
         return veiculoRepository.findAll();
     }
 
+    @GetMapping("/placa/{placa}")
+    public Veiculo buscarPorPlaca(@PathVariable String placa) {
+        return veiculoService.buscarPorPlaca(placa);
+    }
+
+    @GetMapping("/departamento/{departamento}")
+    public List<Veiculo> listarPorDepartamento(@PathVariable String departamento) {
+        return veiculoService.listarPorDepartamento(departamento);
+    }
+
+    @PatchMapping("/{id}/quilometragem")
+    public Veiculo atualizarQuilometragem(@PathVariable Long id, @RequestParam Long quilometragem) {
+        return veiculoService.atualizarQuilometragem(id, quilometragem);
+    }
+
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
+        if (!veiculoRepository.existsById(id)) {
+            throw new VehicleNotFoundException("Veículo não encontrado com id: " + id);
+        }
         veiculoRepository.deleteById(id);
     }
 
     @PutMapping("/{id}")
-    public void editar(@PathVariable Long id, @RequestBody Veiculo veiculoAtualizado) {
+    public Veiculo editar(@PathVariable Long id, @RequestBody Veiculo veiculoAtualizado) {
         Veiculo veiculoExistente = veiculoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Veiculo nao encontrado: " + id));
+                .orElseThrow(() -> new VehicleNotFoundException("Veículo não encontrado com id: " + id));
 
         veiculoExistente.setPlaca(veiculoAtualizado.getPlaca());
         veiculoExistente.setModelo(veiculoAtualizado.getModelo());
@@ -60,8 +81,7 @@ public class VeiculoController {
         veiculoExistente.setKmAtual(veiculoAtualizado.getKmAtual());
         veiculoExistente.setDepartamento(veiculoAtualizado.getDepartamento());
 
-        veiculoRepository.save(veiculoExistente);
+        return veiculoRepository.save(veiculoExistente);
     }
-
-
 }
+

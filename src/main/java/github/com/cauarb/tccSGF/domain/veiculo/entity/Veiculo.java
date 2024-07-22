@@ -23,24 +23,23 @@ public class Veiculo {
     private String placa;
 
     @Column(name = "modelo",length = 30, nullable = false)
-
     private String modelo;
 
     @Column(name = "marca",length = 30, nullable = false)
     private String marca;
 
-    @Column(name = "ano",length = 30, nullable = false)
+    @Column(name = "ano", nullable = false)
     private String ano;
 
-    @Column(name = "kmInicio",length = 30, nullable = false)
-    private Float kmInicio;
+    @Column(name = "kmInicio", nullable = false)
+    private Long kmInicio;
 
-    @Column(name = "kmAtual",length = 30, nullable = false)
-    private Float kmAtual;
+    @NotNull
+    @Column(name = "kmAtual", nullable = false)
+    private Long kmAtual;
 
     @ManyToOne
-    @JoinColumn(name = "id_Deparmento")
-    @NotNull
+    @JoinColumn(name = "id_Departamento")
     private Departamento departamento;
 
     @Override
@@ -54,5 +53,69 @@ public class Veiculo {
                 ", kmInicio=" + kmInicio +
                 ", kmAtual=" + kmAtual +
                 '}';
+    }
+
+    public Long getId_Veiculo() {
+        return id_Veiculo;
+    }
+
+    public void setId_Veiculo(Long id_Veiculo) {
+        this.id_Veiculo = id_Veiculo;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public String getAno() {
+        return ano;
+    }
+
+    public void setAno(String ano) {
+        this.ano = ano;
+    }
+
+    public Long getKmInicio() {
+        return kmInicio;
+    }
+
+    public void setKmInicio(Long kmInicio) {
+        this.kmInicio = kmInicio;
+    }
+
+    public Long getKmAtual() {
+        return kmAtual;
+    }
+
+    public void setKmAtual(Long kmAtual) {
+        this.kmAtual = kmAtual;
+    }
+
+    public Departamento getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(Departamento departamento) {
+        this.departamento = departamento;
     }
 }
