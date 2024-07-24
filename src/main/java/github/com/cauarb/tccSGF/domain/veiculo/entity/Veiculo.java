@@ -1,6 +1,7 @@
 package github.com.cauarb.tccSGF.domain.veiculo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import github.com.cauarb.tccSGF.domain.departamento.entity.Departamento;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,12 +35,11 @@ public class Veiculo {
     @Column(name = "kmInicio", nullable = false)
     private Long kmInicio;
 
-    @NotNull
     @Column(name = "kmAtual", nullable = false)
     private Long kmAtual;
 
     @ManyToOne
-    @JoinColumn(name = "id_Departamento")
+    @JoinColumn(name = "departamento_id", nullable = false)
     private Departamento departamento;
 
     @Override
@@ -114,6 +114,8 @@ public class Veiculo {
     public Departamento getDepartamento() {
         return departamento;
     }
+
+
 
     public void setDepartamento(Departamento departamento) {
         this.departamento = departamento;

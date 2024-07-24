@@ -50,11 +50,6 @@ public class VeiculoController {
         return veiculoService.buscarPorPlaca(placa);
     }
 
-    @GetMapping("/departamento/{departamento}")
-    public List<Veiculo> listarPorDepartamento(@PathVariable String departamento) {
-        return veiculoService.listarPorDepartamento(departamento);
-    }
-
     @PatchMapping("/{id}/quilometragem")
     public Veiculo atualizarQuilometragem(@PathVariable Long id, @RequestParam Long quilometragem) {
         return veiculoService.atualizarQuilometragem(id, quilometragem);

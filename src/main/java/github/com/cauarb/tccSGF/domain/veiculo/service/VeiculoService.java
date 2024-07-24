@@ -1,5 +1,6 @@
 package github.com.cauarb.tccSGF.domain.veiculo.service;
 
+import github.com.cauarb.tccSGF.domain.departamento.entity.Departamento;
 import github.com.cauarb.tccSGF.domain.veiculo.entity.Veiculo;
 import github.com.cauarb.tccSGF.domain.departamento.repository.DepartamentoRepository;
 import github.com.cauarb.tccSGF.domain.veiculo.repository.VeiculoRepository;
@@ -16,12 +17,20 @@ public class VeiculoService {
     @Autowired
     private VeiculoRepository veiculoRepository;
 
+    @Autowired
     private DepartamentoRepository departamentoRepository;
 
     public Veiculo cadastrarVeiculo(Veiculo novoVeiculo) {
         if (veiculoRepository.existsByPlaca(novoVeiculo.getPlaca())) {
             throw new IllegalArgumentException("Veículo com a mesma placa já existe");
         }
+
+        Long departamentoId = novoVeiculo.getDepartamento().getId();
+        Departamento departamento = departamentoRepository.findById(departamentoId)
+                .orElseThrow(() -> new IllegalArgumentException("Departamento não encontrado com id: " + departamentoId));
+
+        novoVeiculo.setDepartamento(departamento);
+
         return veiculoRepository.save(novoVeiculo);
     }
 
