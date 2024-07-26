@@ -24,10 +24,6 @@ public class Departamento {
     @Column(name = "nome",length = 30, nullable = false)
     private String nome;
 
-//    @OneToOne(mappedBy = "departamento", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonManagedReference
-//    private Veiculo veiculo;
-
     @Override
     public String toString() {
         return "Departamento{" +
