@@ -22,6 +22,9 @@ public class Motorista {
     @Column(name = "nome",length = 30, nullable = false)
     private String nome;
 
+    @Column(name = "cpf",length = 11, nullable = false)
+    private String cpf;
+
     @Column(name = "cnh",length = 30, nullable = false)
     private String cnh;
 
@@ -30,6 +33,7 @@ public class Motorista {
         return "Motorista{" +
                 "id_Motorista=" + id_Motorista +
                 ", nome='" + nome + '\'' +
+                ", CPF='" + cpf + '\'' +
                 ", cnh='" + cnh + '\'' +
                 '}';
     }

@@ -2,6 +2,9 @@ package github.com.cauarb.tccSGF.domain.departamento.controller;
 
 import github.com.cauarb.tccSGF.domain.departamento.entity.Departamento;
 import github.com.cauarb.tccSGF.domain.departamento.repository.DepartamentoRepository;
+import github.com.cauarb.tccSGF.domain.departamento.service.DepartamentoService;
+import github.com.cauarb.tccSGF.exceptions.DataIntegrityViolationException;
+import github.com.cauarb.tccSGF.exceptions.DepartamentoNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,30 +20,46 @@ public class DepartamentoController {
     @Autowired
     private DepartamentoRepository departamentoRepository;
 
+    @Autowired
+    private DepartamentoService departamentoService;
+
     @PostMapping
     public ResponseEntity<Departamento> criaDepartamento (@Validated @RequestBody Departamento novoDepartamento) {
-        Departamento departamentoSalvo = departamentoRepository.save(novoDepartamento);
-        return new ResponseEntity<>(departamentoSalvo, HttpStatus.CREATED);
+        try {
+            Departamento departamentoSalvo = departamentoService.criarDepartamento(novoDepartamento);
+            return new ResponseEntity<>(departamentoSalvo, HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping
     public List<Departamento> listarDepartamento() {
-        return departamentoRepository.findAll();
+        return departamentoService.listarDepartamentos();
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        departamentoRepository.deleteById(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        try {
+            departamentoService.deletarDepartamento(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (DepartamentoNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/{id}")
-    public void editar(@PathVariable Long id, @RequestBody Departamento departamentoAtualizado) {
-        Departamento departamentoExistente = departamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Departamento nao encontrado: " + id));
+    public ResponseEntity<Departamento> editar(@PathVariable Long id, @Validated @RequestBody Departamento departamentoAtualizado) {
+        try {
+            Departamento departamentoSalvo = departamentoService.atualizarDepartamento(id, departamentoAtualizado);
+            return new ResponseEntity<>(departamentoSalvo, HttpStatus.OK);
+        } catch (DepartamentoNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
-        departamentoExistente.setNome(departamentoAtualizado.getNome());
-        //departamentoExistente.s(departamentoAtualizado.getSubDepartamentos());
-
-        departamentoRepository.save(departamentoExistente);
+    @GetMapping("/search")
+    public List<Departamento> buscarPorNome(@RequestParam String nome) {
+        return departamentoService.buscarPorNome(nome);
     }
 }
